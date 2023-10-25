@@ -6,7 +6,10 @@ inherit AXE;
 void create()
 {
 	set_name("板斧", ({ "ban fu", "axe", "fu" }));
-	set_weight(50000);
+	// modified the weight from 50000 to 5000
+	// as 50000 is too heavy for player to carry.
+	// 50000 will trigger a bug for player to get nothing by paying
+	set_weight(5000);
 	if (clonep())
 		set_default_object(__FILE__);
 	else {
@@ -19,4 +22,5 @@ void create()
 	}
 	init_axe(25);
 	setup();
+	
 }

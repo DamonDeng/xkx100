@@ -71,9 +71,18 @@ string tribar_graph(int val, int eff, int max, string color)
 }
 int check_cc(string str)
 {
+
+	// string debug_str;
 	int i, nn_len;
-	for (nn_len=0,i=0;i<strwidth(str);i++)
+
+	// debug_message("trying to debug the check cc function");
+	// debug_message(str);
+	// debug_str = sprintf("strwidth of the str: %d", strlen(str));
+	// debug_message(debug_str);
+
+	for (nn_len=0,i=0;i<strlen(str);i++)
 	{
+		// debug_message(sprintf("in %d", i));
 		if (str[i]==27)
 		{
 			for (;str[i]!=109;i++)
@@ -151,7 +160,7 @@ int main(object me, string arg)
 
 	line = "\n┏----------"+HIR"【个人档案】"NOR"--------┓ "+MAG"\t\t"+"    天赋"NOR"\n";
 
-	line += sprintf("%-32s┃%s\n","┃",CYN"    悟性：["NOR+display_attr(my["int"], my["int"])+"/"+display_attr(my["int"], ob->query_int())+CYN"]     根骨：["NOR+display_attr(my["con"], my["con"])+"/"+display_attr(my["con"], ob->query_con())+CYN"] "NOR);
+	line += sprintf("%-31s┃%s\n","┃",CYN"    悟性：["NOR+display_attr(my["int"], my["int"])+"/"+display_attr(my["int"], ob->query_int())+CYN"]     根骨：["NOR+display_attr(my["con"], my["con"])+"/"+display_attr(my["con"], ob->query_con())+CYN"] "NOR);
 
 	line += sprintf("┃头　　衔：　  %s%s┃%s\n", RANK_D->query_rank(ob), fill_blank(remove_ansi(RANK_D->query_rank(ob)), 16), CYN"    膂力：["NOR+display_attr(my["str"], my["str"])+"/"+display_attr(my["str"], ob->query_str())+CYN"]     身法：["NOR+display_attr(my["dex"], my["dex"])+"/"+display_attr(my["dex"], ob->query_dex())+CYN"]"NOR);
 
@@ -184,11 +193,11 @@ int main(object me, string arg)
 		if( ob->query("degree") )
 		{
 			all_title = ob->query("degree")+ob->query("title");
-			line += sprintf("┃称　　谓：  　%s%s┃\n", all_title, fill_blank(remove_ansi(all_title), 58),);
+			line += sprintf("┃称　　谓：  　%s%s┃\n", all_title, fill_blank(remove_ansi(all_title), 57),);
 		}
 		else
 		{
-			line += sprintf("┃称　　谓：  　%s%s┃\n", ob->query("title"), fill_blank(remove_ansi(ob->query("title")), 58),);
+			line += sprintf("┃称　　谓：  　%s%s┃\n", ob->query("title"), fill_blank(remove_ansi(ob->query("title")), 57),);
 		}
 	}
 
