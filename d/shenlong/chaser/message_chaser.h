@@ -7,12 +7,17 @@ void message_chaser()
 	object *obj, ob, owner, rum_ob, *owners;
 	object victim, chaser_ob, thief_ob, dest, room;
 	string *names, filename, *filenames, file, chaser_file;
-	int i, v_exp, temp;
+	
+	// comment out temp definition to avoid warning
+	// int i, v_exp, temp;
+	int i;
 
-	string *levels = ({
-		"500000",
-		"1000000",
-	});
+
+	// comment out to avoid warning
+	// string *levels = ({
+	// 	"500000",
+	// 	"1000000",
+	// });
 
 	remove_call_out("message_chaser");
 //	call_out("message_chaser", 130 + random(100));
