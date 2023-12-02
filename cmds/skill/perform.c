@@ -35,13 +35,13 @@ int main(object me, string arg)
 			return notify_fail("你的手腕受伤，不能施用外功。\n");
 	if( me->query_temp("dagou/feng") )
 			return notify_fail("你的招式被打狗棒封住，不能施用外功。\n");
-	if( !arg ) 
+	if( !arg )
 			return notify_fail("你要用外功做什么？\n");
   if (me->query_temp("no_perform"))
     	return notify_fail(HIR "你只觉全身力道竟似涣散了一般，全然无法控制。\n" NOR);
 
 //比武perform限制
-	
+
 	if (me->query_temp("biwu/perform_time"))
 	{
 		if (time()-(int)me->query_temp("biwu/perform_time")<8+random(3))
@@ -115,7 +115,7 @@ int main(object me, string arg)
                 message_combatd(msg, me);
         }
 //from here
-//怎么处理的两次的busy? 
+//怎么处理的两次的busy?
 //        busy = me->query_busy();
 //        me->interrupt_busy(0);
 //        if (intp(busy) && intp(me->query_busy()) &&
@@ -135,7 +135,7 @@ int main(object me, string arg)
 /////////add finish///////////////
 }
 private int do_perform(object me, string arg)
-{	
+{
 	object weapon, target;
 	string martial, skill/*,pfarg, uarg, parg*/;
 	int result,i,j,ap,dp,plvl,xlvl;
@@ -164,14 +164,14 @@ private int do_perform(object me, string arg)
 //		{
 //			pfarg = "perform/" + parg;
 //			if( me->query(pfarg,1)<1 )
-//				return notify_fail("你必须先向贵派掌门请教如何运用这门外功。\n");			
+//				return notify_fail("你必须先向贵派掌门请教如何运用这门外功。\n");
 //		}
-		else 
+		else
 		{
 			pfarg = "perform/" + arg;
 			if( me->query(pfarg,1)<1 )
 				return notify_fail("你必须先向贵派掌门请教如何运用这门外"+arg+"。\n");
-		}		
+		}
 	}*/
 	if (!stringp(me->query_skill_mapped("force")))
 		return notify_fail("没有任何内功做为基础，是发挥不出招式威力的。\n");
@@ -181,7 +181,7 @@ private int do_perform(object me, string arg)
 		martial!="parry" && martial!="dodge")
 	{
 		pre_skl = me->query_skill_prepare();
-		if( !pre_skl ) 
+		if( !pre_skl )
 			return notify_fail( "请先用 prepare 指令准备你要使用的外功。\n");
 		else
 		{
@@ -194,14 +194,16 @@ private int do_perform(object me, string arg)
 		}
 	}
 /* 以下是正常出手 */
-	if( me->query_temp("lonely-sword/pozhang") && 
+	if( me->query_temp("lonely-sword/pozhang") &&
 	member_array(martial,prep_skl)!=-1 )
 			return notify_fail(HIR"你的手掌受伤，手里使不上劲。\n"NOR);
 	if (arg != "xingyi")
 	{
-		if( stringp(skill = me->query_skill_mapped(martial)) )
+		if(!stringp(skill = me->query_skill_mapped(martial)) )
 		{
 			notify_fail("你所使用的外功中没有这种功能。\n");
+		}
+		else{
 			if( SKILL_D(skill)->perform_action(me, arg) )
 			{
 				if( random(120) < (int)me->query_skill(skill) )
@@ -221,7 +223,7 @@ private int do_perform(object me, string arg)
 	else
 	{
 		me->clean_up_enemy();
-		target = me->select_opponent(); 
+		target = me->select_opponent();
 
 		if (martial != "parry" ||
 			me->query_skill_mapped("parry") != "douzhuan-xingyi")
@@ -243,32 +245,32 @@ private int do_perform(object me, string arg)
 		if( !target->is_character() )
 			return notify_fail("看清楚一点，那并不是生物。\n");
 		if (!living(target) || target->query_temp("noliving") )
-			return notify_fail(target->name()+ "已经没知觉了，你用不了对方的力道了。\n"); 
+			return notify_fail(target->name()+ "已经没知觉了，你用不了对方的力道了。\n");
 
 		msg = HIG"$N运起神元功，一口真气自丹田猛地提了上来！\n"NOR;
 		message_combatd(msg,me,target);
 /* 出手有兵器，则使用其兵器的perform */
 		if( objectp(weapon = me->query_temp("weapon")))
 		{
-			sktype = weapon->query("skill_type"); 
+			sktype = weapon->query("skill_type");
 			if( !objectp(tweapon = target->query_temp("weapon")) ||
-				sktype != tweapon->query("skill_type") ) 
-					return notify_fail(HIR"你和"+target->query("name")+"没有持相同类型的兵器，没法「星移」。\n"NOR); 
+				sktype != tweapon->query("skill_type") )
+					return notify_fail(HIR"你和"+target->query("name")+"没有持相同类型的兵器，没法「星移」。\n"NOR);
 			else
 			{
-				if( me->query_skill(sktype,1) < 120) 
-					return notify_fail(HIR"你的"+to_chinese(sktype)+"修为太浅，没法使用「星移」。\n"NOR); 
+				if( me->query_skill(sktype,1) < 120)
+					return notify_fail(HIR"你的"+to_chinese(sktype)+"修为太浅，没法使用「星移」。\n"NOR);
 				skname = target->query_skill_mapped(sktype);
 				if( skname == "murong-sword" ||
 					skname == "murong-blade")
-					return notify_fail(HIR+target->query("name")+"深谙慕容世家的功夫，你没法使用「星移」。\n"NOR); 
+					return notify_fail(HIR+target->query("name")+"深谙慕容世家的功夫，你没法使用「星移」。\n"NOR);
 				if(!file = get_dir("/kungfu/skill/"+skname+"/"))
-					return notify_fail(HIR+target->query("name")+"目前使的武功没有绝招，没法「星移」。\n"NOR); 
+					return notify_fail(HIR+target->query("name")+"目前使的武功没有绝招，没法「星移」。\n"NOR);
 				skpf = file[random(sizeof(file))];
 
 				ap=random(plvl/2)+xlvl/2;
 				dp=target->query_skill("parry") / 2;
-				if(dp < 1) dp = 1; 
+				if(dp < 1) dp = 1;
 				if (strsrch(skpf, ".c") >= 0 && ap > dp)
 				{
 					skpf=replace_string(skpf,".c","");
@@ -302,20 +304,20 @@ private int do_perform(object me, string arg)
 /* 你没有兵器 */
 		{
 			if( objectp(tweapon = target->query_temp("weapon")))
-				return notify_fail(HIR"你和"+target->query("name")+"没有持相同类型的兵器，没法「星移」。\n"NOR); 
+				return notify_fail(HIR"你和"+target->query("name")+"没有持相同类型的兵器，没法「星移」。\n"NOR);
 			else
 			{
 				if( !mapp(pre_skl = target->query_skill_prepare()) || !sizeof(pre_skl))
 					sktype = "unarmed";
   			else sktype = keys(pre_skl)[random(sizeof(pre_skl))];
-				
-				if( me->query_skill(sktype, 1) < 120) 
-					return notify_fail(HIR"你的"+to_chinese(sktype)+"修为太浅，没法使用「星移」。\n"NOR); 
+
+				if( me->query_skill(sktype, 1) < 120)
+					return notify_fail(HIR"你的"+to_chinese(sktype)+"修为太浅，没法使用「星移」。\n"NOR);
 
 				skname = target->query_skill_mapped(sktype);
 				if( skname == "xingyi-strike" ||
 					skname == "canhe-finger")
-					return notify_fail(HIR+target->query("name")+"深谙慕容世家的功夫，你没法使用「星移」。\n"NOR); 
+					return notify_fail(HIR+target->query("name")+"深谙慕容世家的功夫，你没法使用「星移」。\n"NOR);
 /* 对方徒手没有perform */
 				if(!file = get_dir("/kungfu/skill/"+skname+"/"))
 				{
@@ -336,7 +338,7 @@ private int do_perform(object me, string arg)
 
 				ap=random(plvl/2)+xlvl/2;
 				dp=target->query_skill("parry") / 2;
-				if(dp < 1) dp = 1; 
+				if(dp < 1) dp = 1;
 				if (strsrch(skpf, ".c") >= 0 && ap > dp)
 				{
 					skpf=replace_string(skpf,".c","");
@@ -350,7 +352,7 @@ private int do_perform(object me, string arg)
 //						me->start_busy(random(2)+1);
 					}
 					else
-					{						
+					{
 						result = 0;
 						msg = HIG"$N一时没捉摸到$n出手时的力道所在，使出「星移」落在了空处！\n"NOR;
 						message_combatd(msg,me,target);
